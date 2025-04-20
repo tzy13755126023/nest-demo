@@ -28,7 +28,6 @@ export class JwtDecrypTool {
     } catch (error) {
       throw new BadRequestException(error ?? '请先登录！');
     }
-    console.log(decodedToken);
     if (!decodedToken) throw new BadRequestException('请先登录！');
     if (decodedToken.exp - decodedToken.iat <= 0) {
       throw new BadRequestException('登录已过期，请重新登录！');

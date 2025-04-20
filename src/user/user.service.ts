@@ -1,4 +1,4 @@
-import { SecretTool, JwtDecrypTool } from './../utils/InternalTools';
+import { SecretTool } from './../utils/InternalTools';
 import {
   BadRequestException,
   HttpException,
@@ -19,7 +19,6 @@ export class UserService {
     @InjectRepository(User) private readonly userRepository: Repository<User>,
     private readonly SecretTool: SecretTool,
     private readonly jwtService: JwtService,
-    private readonly jwtDecrypTool: JwtDecrypTool,
   ) {}
   async create({
     username,
