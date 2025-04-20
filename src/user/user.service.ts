@@ -12,6 +12,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { Repository } from 'typeorm';
 import { JwtService } from '@nestjs/jwt';
+import { DeleteUserDto } from './dto/delete-user.dto';
 
 @Injectable()
 export class UserService {
@@ -36,6 +37,7 @@ export class UserService {
           username,
           password: this.SecretTool.getSecret(password),
           head_img: 'https://bu.dusays.com/2022/05/02/626f92e193879.jpg',
+          del: '0',
         })
         .catch(() => {
           throw new InternalServerErrorException('用户创建失败');
@@ -63,8 +65,11 @@ export class UserService {
     }
     return {
       msg: '登录成功！',
-      data: this.jwtService.sign({ id: userRow.id }),
+      token: this.jwtService.sign({ id: userRow.id }),
     };
+  }
+  async findAll() {
+    return await this.userRepository.findBy({ del: '0' });
   }
   async find(id: number) {
     try {
@@ -91,11 +96,10 @@ export class UserService {
   }
 
   update(id: number, updateUserDto: UpdateUserDto) {
-    console.log(updateUserDto);
-    return `This action updates a #${id} user`;
+    return this.userRepository.update(id, updateUserDto);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+  remove(id: DeleteUserDto) {
+    return this.userRepository.update(id, { del: '1' });
   }
 }

@@ -3,8 +3,7 @@ import {
   Get,
   Post,
   Body,
-  Patch,
-  Param,
+  Put,
   Delete,
   Headers,
 } from '@nestjs/common';
@@ -12,6 +11,7 @@ import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { JwtDecrypTool } from './../utils/InternalTools';
+import { DeleteUserDto } from './dto/delete-user.dto';
 
 @Controller('user')
 export class UserController {
@@ -19,7 +19,6 @@ export class UserController {
     private readonly userService: UserService,
     private readonly jwtDecrypTool: JwtDecrypTool,
   ) {}
-
   @Post('create')
   create(@Body() CreateUserDto: CreateUserDto) {
     return this.userService.create(CreateUserDto);
@@ -30,6 +29,11 @@ export class UserController {
     return this.userService.login(LoginDto);
   }
 
+  @Get()
+  findAll(@Headers() header: { authorization: string }) {
+    this.jwtDecrypTool.getDecryp(header.authorization);
+    return this.userService.findAll();
+  }
   @Get('find')
   find(@Headers() header: { authorization: string }) {
     return this.userService.find(
@@ -37,13 +41,21 @@ export class UserController {
     );
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.userService.update(+id, updateUserDto);
+  @Put()
+  update(
+    @Body() updateUserDto: UpdateUserDto,
+    @Headers() header: { authorization: string },
+  ) {
+    this.jwtDecrypTool.getDecryp(header.authorization);
+    return this.userService.update(updateUserDto.id, updateUserDto);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.userService.remove(+id);
+  @Delete()
+  remove(
+    @Body() deleteUserDto: DeleteUserDto,
+    @Headers() header: { authorization: string },
+  ) {
+    this.jwtDecrypTool.getDecryp(header.authorization);
+    return this.userService.remove(deleteUserDto);
   }
 }

@@ -5,7 +5,7 @@
  * @Author: tzy1997
  * @Version: 0.0.1
  * @Date: 2025-04-20 12:41:52
- * @LastEditTime: 2025-04-20 13:14:44
+ * @LastEditTime: 2025-04-20 21:46:35
  * Copyright (c) 2025 by tzy1997, All Rights Reserved.
  */
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
@@ -23,4 +23,7 @@ export class User {
 
   @Column()
   head_img: string = '';
+
+  @Column()
+  del: string = '';
 }
